@@ -47,6 +47,9 @@ public class Car {
 
     public static class Builder {
 
+        private static final int MIN_YEAR = 1886;
+        private static final int MAX_YEAR = java.time.Year.now().getValue();
+
         private int horsePower;
         private String model;
         private int year;
@@ -67,6 +70,15 @@ public class Car {
         }
 
         public Car build() {
+            if (model == null || model.isBlank()) {
+                throw new IllegalStateException("Model must not be blank");
+            }
+            if (horsePower <= 0) {
+                throw new IllegalStateException("Horse power must be positive");
+            }
+            if (year < MIN_YEAR || year > MAX_YEAR) {
+                throw new IllegalStateException("Year must be between " + MIN_YEAR + " and " + MAX_YEAR);
+            }
             return new Car(this);
         }
     }
