@@ -16,7 +16,7 @@ public class CarValidator {
     public static boolean validateModel(String model) {
         // TODO: реализовать валидацию (не пустая строка)
         if (model == null) return false;
-        return  ! model.isBlank() || ! model.isEmpty();
+        return  ! model.isBlank();
     }
 
     public static boolean validateYear(int year) {
