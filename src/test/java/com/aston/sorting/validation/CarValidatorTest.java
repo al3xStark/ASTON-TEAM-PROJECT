@@ -15,8 +15,6 @@ class CarValidatorTest {
     @ParameterizedTest
     @ValueSource(ints = {-1, 0})
     void horsePowerShouldBeInvalidWhenZeroOrNegative(int horsePower) {
-        // TODO: передать 0, проверить что validateHorsePower возвращает false
-
         boolean isValid = CarValidator.validateHorsePower(horsePower);
 
         assertFalse(isValid);
@@ -25,8 +23,7 @@ class CarValidatorTest {
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 20, 200, 1500, 2500, 3000})
     void horsePowerShouldBeValidWhenPositive(int horsePower) {
-        // TODO: передать положительное число, проверить что возвращает true
-        boolean isValid = CarValidator.validateHorsePower(horsePower);
+            boolean isValid = CarValidator.validateHorsePower(horsePower);
 
         assertTrue(isValid);
     }
@@ -34,7 +31,6 @@ class CarValidatorTest {
     @ParameterizedTest
     @ValueSource(ints = {1880, 1885})
     void yearShouldBeInvalidWhenBefore1886(int year) {
-        // TODO: передать 1885, проверить что validateYear возвращает false
         boolean isValid = CarValidator.validateYear(year);
 
         assertFalse(isValid);
@@ -50,7 +46,6 @@ class CarValidatorTest {
 
     @Test
     void yearShouldBeInvalidWhenInFuture() {
-        // TODO: передать год больше текущего, проверить что validateYear возвращает false
         int nextYear = Instant.now().atZone(ZoneId.systemDefault()).getYear() + 1;
         int inTwoYears = Instant.now().atZone(ZoneId.systemDefault()).getYear() + 2;
 
@@ -65,7 +60,6 @@ class CarValidatorTest {
     @ValueSource(strings = {"", "   "})
     @NullSource
     void modelShouldBeInvalidWhenEmptyOrNullOrBlank(String model) {
-        // TODO: передать пустую строку, проверить что validateModel возвращает false
         boolean isValid = CarValidator.validateModel(model);
 
         assertFalse(isValid);
@@ -74,7 +68,6 @@ class CarValidatorTest {
     @ParameterizedTest
     @ValueSource(strings = {"model", "23hj", "23-xc", "very long model name"})
     void modelShouldBeValidWhenNotEmpty(String model) {
-        // TODO: передать непустую строку, проверить что validateModel возвращает true
         boolean isValid = CarValidator.validateModel(model);
 
         assertTrue(isValid);
