@@ -23,22 +23,12 @@ class CarValidatorTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {1, 2, 20, 200, 1500, 2500})
+    @ValueSource(ints = {1, 2, 20, 200, 1500, 2500, 3000})
     void horsePowerShouldBeValidWhenPositive(int horsePower) {
         // TODO: передать положительное число, проверить что возвращает true
         boolean isValid = CarValidator.validateHorsePower(horsePower);
 
         assertTrue(isValid);
-    }
-
-    @ParameterizedTest
-    @ValueSource(ints = {2501, 3000})
-    void horsePowerShouldBeInvalidWhenTooBig(int horsePower) {
-        // TODO: передать 0, проверить что validateHorsePower возвращает false
-
-        boolean isValid = CarValidator.validateHorsePower(horsePower);
-
-        assertFalse(isValid);
     }
 
     @ParameterizedTest

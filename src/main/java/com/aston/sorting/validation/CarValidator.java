@@ -10,7 +10,7 @@ public class CarValidator {
 
     public static boolean validateHorsePower(int horsePower) {
         // TODO: реализовать валидацию (например, > 0)
-        return 0 < horsePower && horsePower <= 2500 ;
+        return 0 < horsePower;
     }
 
     public static boolean validateModel(String model) {
