@@ -32,7 +32,7 @@ class CarValidatorTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {1880, 1886})
+    @ValueSource(ints = {1880, 1885})
     void yearShouldBeInvalidWhenBefore1886(int year) {
         // TODO: передать 1885, проверить что validateYear возвращает false
         boolean isValid = CarValidator.validateYear(year);
@@ -42,8 +42,10 @@ class CarValidatorTest {
 
     @ParameterizedTest
     @ValueSource(ints = {1886, 1887, 1900, 1960, 2000, 2026})
-    void yearShouldBeValidWhenBetween1886AndCurrentYear() {
-        // TODO: передать 1886, проверить что validateYear возвращает true
+    void yearShouldBeValidWhenBetween1886AndCurrentYear(int year) {
+        boolean isValid = CarValidator.validateYear(year);
+
+        assertTrue(isValid);
     }
 
     @Test
