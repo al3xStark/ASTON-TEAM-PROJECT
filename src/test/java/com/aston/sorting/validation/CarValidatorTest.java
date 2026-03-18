@@ -1,57 +1,75 @@
 package com.aston.sorting.validation;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
+
+import java.time.Instant;
+import java.time.ZoneId;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class CarValidatorTest {
 
-    @Test
-    void horsePowerShouldBeInvalidWhenZero() {
-        // TODO: передать 0, проверить что validateHorsePower возвращает false
+    @ParameterizedTest
+    @ValueSource(ints = {-1, 0})
+    void horsePowerShouldBeInvalidWhenZeroOrNegative(int horsePower) {
+        boolean isValid = CarValidator.validateHorsePower(horsePower);
+
+        assertFalse(isValid);
     }
 
-    @Test
-    void horsePowerShouldBeValidWhenPositive() {
-        // TODO: передать положительное число, проверить что возвращает true
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 20, 200, 1500, 2500, 3000})
+    void horsePowerShouldBeValidWhenPositive(int horsePower) {
+            boolean isValid = CarValidator.validateHorsePower(horsePower);
+
+        assertTrue(isValid);
     }
 
-    @Test
-    void yearShouldBeInvalidWhenBefore1886() {
-        // TODO: передать 1885, проверить что validateYear возвращает false
+    @ParameterizedTest
+    @ValueSource(ints = {1880, 1885})
+    void yearShouldBeInvalidWhenBefore1886(int year) {
+        boolean isValid = CarValidator.validateYear(year);
+
+        assertFalse(isValid);
     }
 
-    @Test
-    void yearShouldBeValidWhen1886() {
-        // TODO: передать 1886, проверить что validateYear возвращает true
-    }
+    @ParameterizedTest
+    @ValueSource(ints = {1886, 1887, 1900, 1960, 2000, 2026})
+    void yearShouldBeValidWhenBetween1886AndCurrentYear(int year) {
+        boolean isValid = CarValidator.validateYear(year);
 
-    @Test
-    void yearShouldBeValidWhenCurrentYear() {
-        // TODO: передать текущий год, проверить что validateYear возвращает true
+        assertTrue(isValid);
     }
 
     @Test
     void yearShouldBeInvalidWhenInFuture() {
-        // TODO: передать год больше текущего, проверить что validateYear возвращает false
+        int nextYear = Instant.now().atZone(ZoneId.systemDefault()).getYear() + 1;
+        int inTwoYears = Instant.now().atZone(ZoneId.systemDefault()).getYear() + 2;
+
+        boolean isValidNextYear = CarValidator.validateYear(nextYear);
+        boolean isValidInTwoYears = CarValidator.validateYear(inTwoYears);
+
+        assertFalse(isValidNextYear);
+        assertFalse(isValidInTwoYears);
     }
 
-    @Test
-    void modelShouldBeInvalidWhenEmpty() {
-        // TODO: передать пустую строку, проверить что validateModel возвращает false
+    @ParameterizedTest
+    @ValueSource(strings = {"", "   "})
+    @NullSource
+    void modelShouldBeInvalidWhenEmptyOrNullOrBlank(String model) {
+        boolean isValid = CarValidator.validateModel(model);
+
+        assertFalse(isValid);
     }
 
-    @Test
-    void modelShouldBeInvalidWhenNull() {
-        // TODO: передать null, проверить что validateModel возвращает false
-    }
+    @ParameterizedTest
+    @ValueSource(strings = {"model", "23hj", "23-xc", "very long model name"})
+    void modelShouldBeValidWhenNotEmpty(String model) {
+        boolean isValid = CarValidator.validateModel(model);
 
-    @Test
-    void modelShouldBeValidWhenNotEmpty() {
-        // TODO: передать непустую строку, проверить что validateModel возвращает true
-    }
-
-    @Test
-    void modelShouldBeInvalidWhenBlank() {
-        // TODO: передать строку из пробелов "   ",
-        //       проверить что validateModel возвращает false
+        assertTrue(isValid);
     }
 }
