@@ -11,7 +11,6 @@ import java.util.Scanner;
 public class ManualInputHandler implements InputHandler {
     private final Scanner scanner;
 
-
     public ManualInputHandler(InputStream input) {
         this.scanner = new Scanner(input);
     }

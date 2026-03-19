@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.util.List;
 
 class ManualInputHandlerTest {
+
     @Test
     void shouldCreateCarFromValidInput() {
             String input = "99\nLada\n2010\n";
