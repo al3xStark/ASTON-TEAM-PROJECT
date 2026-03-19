@@ -15,8 +15,6 @@ public class EvenOddSortStrategy implements SortStrategy<Car> {
      */
     @Override
     public void sort(List<Car> list, Comparator<Car> comparator) {
-        // TODO: объекты с чётным horsePower сортируются в натуральном порядке,
-        //       объекты с нечётным — остаются на исходных позициях
         if (list == null || list.size() <= 1) {
             return;
         }
