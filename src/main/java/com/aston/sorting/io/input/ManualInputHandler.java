@@ -49,7 +49,7 @@ public class ManualInputHandler implements InputHandler {
             year = scanner.nextInt();
 
             while (! CarValidator.validateYear(year)) {
-                System.out.printf("Ошибка: год должен быть между 1896 и текущим (год = %d). Введите год: \n", year);
+                System.out.printf("Ошибка: год должен быть между 1886 и текущим (год = %d). Введите год: \n", year);
                 year= scanner.nextInt();
             }
 
