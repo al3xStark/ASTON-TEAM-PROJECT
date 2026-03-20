@@ -2,6 +2,7 @@ package com.aston.sorting.strategy;
 
 import com.aston.sorting.comparator.CarComparators;
 import com.aston.sorting.model.Car;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -10,10 +11,18 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
 // Стратегия сортирует по полю horsePower:
 // элементы с чётным horsePower сортируются в натуральном порядке,
 // элементы с нечётным horsePower остаются на исходных позициях.
 class EvenOddSortStrategyTest {
+
+    private EvenOddSortStrategy sortStrategy;
+
+    @BeforeEach
+    void setUp() {
+        sortStrategy = new EvenOddSortStrategy(new MergeSortStrategy());
+    }
 
     @Test
     void evenElementsShouldBeSortedAndOddShouldRemainInPlace() {
@@ -42,7 +51,6 @@ class EvenOddSortStrategyTest {
         List<Car> cars = new ArrayList<>(originalCars);
 
         // 2. Действие (сортировка исходной коллекции)
-        EvenOddSortStrategy sortStrategy = new EvenOddSortStrategy();
         sortStrategy.sort(cars, CarComparators.BY_HORSE_POWER);
 
         // 3. Проверка
@@ -80,7 +88,6 @@ class EvenOddSortStrategyTest {
         );
 
         // 2. Действие (сортировка исходной коллекции)
-        EvenOddSortStrategy sortStrategy = new EvenOddSortStrategy();
         sortStrategy.sort(originalCars, CarComparators.BY_HORSE_POWER);
 
         // 3. Проверка
@@ -112,7 +119,6 @@ class EvenOddSortStrategyTest {
         );
 
         // 2. Действие (сортировка исходной коллекции)
-        EvenOddSortStrategy sortStrategy = new EvenOddSortStrategy();
         sortStrategy.sort(originalCars, CarComparators.BY_HORSE_POWER);
 
         // 3. Проверка
@@ -128,7 +134,6 @@ class EvenOddSortStrategyTest {
         List<Car> originalCars = Arrays.asList();
 
         // 2. Действие и проверка (вызов метода сортировки)
-        EvenOddSortStrategy sortStrategy = new EvenOddSortStrategy();
         assertDoesNotThrow(() -> sortStrategy.sort(originalCars, CarComparators.BY_HORSE_POWER),
                 "Метод sort() выбросил исключение, хотя не должен был");
     }
@@ -140,11 +145,10 @@ class EvenOddSortStrategyTest {
 
         // 1. Подготовка (создание двух списков "до сортировки" и "после сортировки"
         // с одинаковым одним элементом внутри)
-        List<Car> originalCars = List.of(new Car.Builder().horsePower(187).model("Toyota").year(2004).build());
-        List<Car> orderedCars = List.of(new Car.Builder().horsePower(187).model("Toyota").year(2004).build());
+        List<Car> originalCars = new ArrayList<>(List.of(new Car.Builder().horsePower(187).model("Toyota").year(2004).build()));
+        List<Car> orderedCars = new ArrayList<>(List.of(new Car.Builder().horsePower(187).model("Toyota").year(2004).build()));
 
         // 2. Действие (сортировка исходной коллекции)
-        EvenOddSortStrategy sortStrategy = new EvenOddSortStrategy();
         sortStrategy.sort(originalCars, CarComparators.BY_HORSE_POWER);
 
         // 3. Проверка
