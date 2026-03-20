@@ -114,7 +114,7 @@ class MergeSortStrategyTest {
         List<Car> originalCars = Arrays.asList();
 
         // 2. Действие и проверка (вызов метода сортировки)
-        MergeSortStrategy mergeSortStrategy = new MergeSortStrategy();
+        mergeSortStrategy = new MergeSortStrategy();
         assertDoesNotThrow(() -> mergeSortStrategy.sort(originalCars, CarComparators.BY_HORSE_POWER),
                 "Метод sort() выбросил исключение, хотя не должен был");
     }
