@@ -2,8 +2,10 @@ package com.aston.sorting.strategy;
 
 import com.aston.sorting.comparator.CarComparators;
 import com.aston.sorting.model.Car;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -11,6 +13,13 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MergeSortStrategyTest {
+
+    private MergeSortStrategy mergeSortStrategy;
+
+    @BeforeEach
+    void setUp() {
+        mergeSortStrategy = new MergeSortStrategy();
+    }
 
     @Test
     void shouldSortByHorsePower() {
@@ -34,7 +43,6 @@ class MergeSortStrategyTest {
         );
 
         // 2. Действие (сортировка исходной коллекции)
-        MergeSortStrategy mergeSortStrategy = new MergeSortStrategy();
         mergeSortStrategy.sort(originalCars, CarComparators.BY_HORSE_POWER);
 
         // 3. Проверка
@@ -63,7 +71,6 @@ class MergeSortStrategyTest {
         );
 
         // 2. Действие (сортировка исходной коллекции)
-        MergeSortStrategy mergeSortStrategy = new MergeSortStrategy();
         mergeSortStrategy.sort(originalCars, CarComparators.BY_MODEL);
 
         // 3. Проверка
@@ -92,7 +99,6 @@ class MergeSortStrategyTest {
         );
 
         // 2. Действие (сортировка исходной коллекции)
-        MergeSortStrategy mergeSortStrategy = new MergeSortStrategy();
         mergeSortStrategy.sort(originalCars, CarComparators.BY_YEAR);
 
         // 3. Проверка
@@ -120,11 +126,10 @@ class MergeSortStrategyTest {
 
         // 1. Подготовка (создание двух списков "до сортировки" и "после сортировки"
         // с одинаковым одним элементом внутри)
-        List<Car> originalCars = List.of(new Car.Builder().horsePower(187).model("Toyota").year(2004).build());
-        List<Car> orderedCars = List.of(new Car.Builder().horsePower(187).model("Toyota").year(2004).build());
+        List<Car> originalCars = new ArrayList<>(List.of(new Car.Builder().horsePower(187).model("Toyota").year(2004).build()));
+        List<Car> orderedCars = new ArrayList<>(List.of(new Car.Builder().horsePower(187).model("Toyota").year(2004).build()));
 
         // 2. Действие (сортировка исходной коллекции)
-        MergeSortStrategy mergeSortStrategy = new MergeSortStrategy();
         mergeSortStrategy.sort(originalCars, CarComparators.BY_YEAR);
 
         // 3. Проверка
@@ -156,7 +161,6 @@ class MergeSortStrategyTest {
         );
 
         // 2. Действие (сортировка исходной коллекции)
-        MergeSortStrategy mergeSortStrategy = new MergeSortStrategy();
         mergeSortStrategy.sort(originalCars, CarComparators.BY_HORSE_POWER);
 
         // 3. Проверка
