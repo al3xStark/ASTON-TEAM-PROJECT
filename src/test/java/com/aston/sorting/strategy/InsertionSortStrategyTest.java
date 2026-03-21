@@ -1,15 +1,17 @@
 package com.aston.sorting.strategy;
-
 import com.aston.sorting.model.Car;
-import org.junit.Test;
 
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+import com.aston.sorting.comparator.CarComparators;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 import static com.aston.sorting.strategy.Insertion_Sort.insertionSortCar;
 import static com.aston.sorting.strategy.RandomCar.generateRandomCars;
-import static org.junit.Assert.fail;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class InsertionSortStrategyTest {
@@ -26,8 +28,10 @@ public class InsertionSortStrategyTest {
         }
 
         // Сортировка по мощности
-        Comparator<Car> byHorsePower = (c1, c2) -> Integer.compare(c1.getHorsePower(), c2.getHorsePower());
-        insertionSortCar(randomCars, byHorsePower);
+        Comparator<Car> BY_HORSE_POWER = (a, b) -> Integer.compare(a.getHorsePower(), b.getHorsePower());
+
+        new InsertionSortStrategy().sort(randomCars, BY_HORSE_POWER);
+
 
         System.out.println("По мощности:");
         for (Car car : randomCars) {
@@ -45,9 +49,10 @@ public class InsertionSortStrategyTest {
             System.out.println(car);
         }
         // Сортировка по модели
-        Comparator<Car> byModel = (c1, c2) -> c1.getModel().compareTo(c2.getModel());
-        insertionSortCar(randomCars, byModel);
+        Comparator<Car> BY_MODEL =
+                (a, b) -> a.getModel().compareToIgnoreCase(b.getModel());
 
+        new InsertionSortStrategy().sort(randomCars, BY_MODEL);
         System.out.println("\nПо модели:");
         for (Car car : randomCars) {
             System.out.println(car);
@@ -65,8 +70,10 @@ public class InsertionSortStrategyTest {
             System.out.println(car);
         }
         //Сортировка по году
-        Comparator<Car> byYear = (c1, c2) -> Integer.compare(c1.getYear(), c2.getYear());
-        insertionSortCar(randomCars, byYear);
+        Comparator<Car> BY_YEAR =
+                (a, b) -> Integer.compare(a.getYear(), b.getYear());
+
+        new InsertionSortStrategy().sort(randomCars, BY_YEAR);
         System.out.println("\nПо году:");
         for (Car car : randomCars) {
             System.out.println(car);
@@ -81,7 +88,8 @@ public class InsertionSortStrategyTest {
         Comparator<Car> comparator = Comparator.comparingInt(Car::getHorsePower);
 
         try {
-            insertionSortCar(emptyList, comparator);
+            new InsertionSortStrategy().sort(emptyList, comparator);
+
         } catch (Exception e) {
             fail("Сортировка не должна выбрасывать исключение для пустого списка, но выбросила: " + e);
         }
@@ -109,7 +117,8 @@ public class InsertionSortStrategyTest {
         System.out.println(car);
 
         try {
-            insertionSortCar(singleElementList, comparator);
+            new InsertionSortStrategy().sort(singleElementList, comparator);
+
         } catch (Exception e) {
             fail("Сортировка не должна выбрасывать исключение для списка из одного элемента, но выбросила: " + e);
         }
@@ -140,8 +149,8 @@ public class InsertionSortStrategyTest {
         cars.add(car5);
 
         Comparator<Car> comparator = Comparator.comparingInt(Car::getHorsePower);
+        new InsertionSortStrategy().sort(cars, comparator);
 
-        insertionSortCar(cars, comparator);
 
         // Проверяем, что список отсортирован по horsepower
         // Мощности после сортировки должны идти по возрастанию:
