@@ -1,32 +1,85 @@
 package com.aston.sorting.io;
 
+import com.aston.sorting.io.output.FileOutputHandler;
+import com.aston.sorting.model.Car;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class FileOutputHandlerTest {
 
-    // Используй @TempDir для создания временных файлов — JUnit 5 сам создаёт
-    // и удаляет временную директорию после каждого теста.
-    //
-    // Пример получения пути к временному файлу:
-    //   Path file = tempDir.resolve("output.txt");
-    //   FileOutputHandler handler = new FileOutputHandler();
-    //   handler.write(list, file.toString());
-    //   String content = Files.readString(file);
+    private FileOutputHandler handler;
 
-    @Test
-    void writeListShouldAppendToFile(@TempDir Path tempDir) {
-        // TODO: вызвать write() дважды с разными списками,
-        //       прочитать файл и проверить что содержимое обоих вызовов присутствует
+    @BeforeEach
+    void setUp() {
+        handler = new FileOutputHandler();
+    }
+
+    private static Car car(int hp, String model, int year) {
+        return new Car.Builder().horsePower(hp).model(model).year(year).build();
     }
 
     @Test
-    void writeCountShouldAppendToFile(@TempDir Path tempDir) {
-        // TODO: вызвать writeCount() дважды,
-        //       прочитать файл и проверить что содержимое обоих вызовов присутствует
+    void writeListShouldAppendToFile(@TempDir Path tempDir) throws IOException {
+        Path file = tempDir.resolve("output.txt");
+
+        handler.writeList(List.of(car(150, "Toyota", 2020)), file.toString());
+        handler.writeList(List.of(car(200, "BMW", 2022)), file.toString());
+
+        String content = Files.readString(file);
+        assertTrue(content.contains("Toyota"));
+        assertTrue(content.contains("BMW"));
     }
 
+    @Test
+    void writeCountShouldAppendToFile(@TempDir Path tempDir) throws IOException {
+        Path file = tempDir.resolve("output.txt");
+        Car target = car(100, "Honda", 2019);
 
+        handler.writeCount(3, target, file.toString());
+        handler.writeCount(1, target, file.toString());
+
+        String content = Files.readString(file);
+        assertEquals(2, content.lines().filter(l -> l.startsWith("Count of")).count());
+        assertTrue(content.contains("= 3"));
+        assertTrue(content.contains("= 1"));
+    }
+
+    @Test
+    void writeListShouldIncludeHeaderWithSortType(@TempDir Path tempDir) throws IOException {
+        Path file = tempDir.resolve("output.txt");
+
+        handler.writeList(List.of(car(100, "Lada", 2000)), file.toString(), "InsertionSort");
+
+        String content = Files.readString(file);
+        assertTrue(content.contains("InsertionSort"));
+    }
+
+    @Test
+    void writeListShouldCreateFileIfNotExists(@TempDir Path tempDir) throws IOException {
+        Path file = tempDir.resolve("new_file.txt");
+
+        assertFalse(Files.exists(file));
+        handler.writeList(List.of(car(90, "Kia", 2015)), file.toString());
+        assertTrue(Files.exists(file));
+    }
+
+    @Test
+    void writeListWithEmptyListShouldWriteOnlyHeader(@TempDir Path tempDir) throws IOException {
+        Path file = tempDir.resolve("output.txt");
+
+        handler.writeList(List.of(), file.toString(), "MergeSort");
+
+        List<String> lines = Files.readAllLines(file);
+        assertEquals(2, lines.size());
+        assertTrue(lines.get(0).contains("MergeSort"));
+        assertTrue(lines.get(1).isEmpty());
+    }
 }
