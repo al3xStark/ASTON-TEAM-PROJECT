@@ -2,11 +2,10 @@ package com.aston.sorting.strategy;
 
 import com.aston.sorting.comparator.CarComparators;
 import com.aston.sorting.model.Car;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class InsertionSortStrategyTest {
@@ -26,12 +25,16 @@ public class InsertionSortStrategyTest {
 
         return cars;
     }
-
+    private InsertionSortStrategy sorter;
+    @BeforeEach
+            void setUp(){
+        sorter=new InsertionSortStrategy();
+    }
     @Test
     public void shouldSortByHorsePower() {
 
         List<Car> cars = сarList();
-        InsertionSortStrategy sorter = new InsertionSortStrategy();
+
         sorter.sort(cars, CarComparators.BY_HORSE_POWER);
         for (int i = 0; i < cars.size() - 1; i++) {
             int currentHp = cars.get(i).getHorsePower();
@@ -45,7 +48,6 @@ public class InsertionSortStrategyTest {
     @Test
     public void shouldSortByModel() {
         List<Car> cars = сarList();
-        InsertionSortStrategy sorter = new InsertionSortStrategy();
         sorter.sort(cars, CarComparators.BY_MODEL);
         for (int i = 0; i < cars.size() - 1; i++) {
             String currentModel = cars.get(i).getModel();
@@ -59,7 +61,7 @@ public class InsertionSortStrategyTest {
     @Test
     public void shouldSortByYear() {
         List<Car> cars = сarList();
-        InsertionSortStrategy sorter = new InsertionSortStrategy();
+
         sorter.sort(cars, CarComparators.BY_YEAR);
         for (int i = 0; i < cars.size() - 1; i++) {
             int currentYear = cars.get(i).getYear();
@@ -73,7 +75,7 @@ public class InsertionSortStrategyTest {
     @Test
     public void shouldHandleEmptyList() {
         List<Car> emptyList = new ArrayList<>();
-        InsertionSortStrategy sorter = new InsertionSortStrategy();
+
 
         assertDoesNotThrow(() -> sorter.sort(emptyList, CarComparators.BY_HORSE_POWER),
                 "Сортировка пустого списка должна выполняться без исключений");
@@ -89,7 +91,7 @@ public class InsertionSortStrategyTest {
                 .build();
         List<Car> singleElementList = new ArrayList<>();
         singleElementList.add(car);
-        InsertionSortStrategy sorter = new InsertionSortStrategy();
+
         assertDoesNotThrow(() -> sorter.sort(singleElementList, CarComparators.BY_HORSE_POWER),
                 "Сортировка списка из одного элемента должна быть без исключений");
         assertEquals(1, singleElementList.size(), "Размер списка должен остаться равен 1");
@@ -111,7 +113,7 @@ public class InsertionSortStrategyTest {
         cars.add(car4);
         cars.add(car5);
 
-        InsertionSortStrategy sorter = new InsertionSortStrategy();
+
         sorter.sort(cars, CarComparators.BY_HORSE_POWER);
         List<Car> expectedOrder = List.of(car2, car3, car5, car4, car1);
         assertEquals(expectedOrder.size(), cars.size(), "Размер списка после сортировки не совпадает");
