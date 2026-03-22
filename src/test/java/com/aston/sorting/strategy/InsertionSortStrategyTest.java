@@ -1,180 +1,124 @@
 package com.aston.sorting.strategy;
-import com.aston.sorting.model.Car;
-
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.aston.sorting.comparator.CarComparators;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import com.aston.sorting.model.Car;
+import org.junit.jupiter.api.Test;
 
-import static com.aston.sorting.strategy.Insertion_Sort.insertionSortCar;
-import static com.aston.sorting.strategy.RandomCar.generateRandomCars;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class InsertionSortStrategyTest {
 
+    // Метод создает фиксированный список из 10 машин
+    private List<Car> сarList() {
+        List<Car> cars = new ArrayList<>();
+        cars.add(new Car.Builder().horsePower(150).model("Toyota Corolla").year(2018).build());
+        cars.add(new Car.Builder().horsePower(200).model("Ford Mustang").year(2020).build());
+        cars.add(new Car.Builder().horsePower(120).model("Honda Civic").year(2017).build());
+        cars.add(new Car.Builder().horsePower(180).model("BMW 3 Series").year(2019).build());
+        cars.add(new Car.Builder().horsePower(160).model("Audi A4").year(2016).build());
+        cars.add(new Car.Builder().horsePower(170).model("Volkswagen Golf").year(2018).build());
+        cars.add(new Car.Builder().horsePower(220).model("Chevrolet Camaro").year(2021).build());
+        cars.add(new Car.Builder().horsePower(130).model("Hyundai Elantra").year(2017).build());
+        cars.add(new Car.Builder().horsePower(190).model("Mercedes C-Class").year(2019).build());
+
+        return cars;
+    }
+
     @Test
     public void shouldSortByHorsePower() {
-        // TODO: создать список Car в случайном порядке,
-        //       отсортировать по horsePower, проверить ожидаемый порядок
 
-        List<Car> randomCars = generateRandomCars(20); // создаем 20 машин
-        System.out.println("Случайные машины:");
-        for (Car car : randomCars) {
-            System.out.println(car);
-        }
-
-        // Сортировка по мощности
-        Comparator<Car> BY_HORSE_POWER = (a, b) -> Integer.compare(a.getHorsePower(), b.getHorsePower());
-
-        new InsertionSortStrategy().sort(randomCars, BY_HORSE_POWER);
-
-
-        System.out.println("По мощности:");
-        for (Car car : randomCars) {
-            System.out.println(car);
+        List<Car> cars = сarList();
+        InsertionSortStrategy sorter = new InsertionSortStrategy();
+        sorter.sort(cars, CarComparators.BY_HORSE_POWER);
+        for (int i = 0; i < cars.size() - 1; i++) {
+            int currentHp = cars.get(i).getHorsePower();
+            int nextHp = cars.get(i + 1).getHorsePower();
+            assertTrue(currentHp <= nextHp,
+                    "Список не отсортирован по мощности: элемент " + i + " с мощностью " + currentHp +
+                            " стоит перед элементом " + (i + 1) + " с мощностью " + nextHp);
         }
     }
 
     @Test
     public void shouldSortByModel() {
-        // TODO: создать список Car в случайном порядке,
-        //       отсортировать по model, проверить ожидаемый порядок
-        List<Car> randomCars = generateRandomCars(20); // создаем 20 машин
-        System.out.println("Случайные машины:");
-        for (Car car : randomCars) {
-            System.out.println(car);
+        List<Car> cars = сarList();
+        InsertionSortStrategy sorter = new InsertionSortStrategy();
+        sorter.sort(cars, CarComparators.BY_MODEL);
+        for (int i = 0; i < cars.size() - 1; i++) {
+            String currentModel = cars.get(i).getModel();
+            String nextModel = cars.get(i + 1).getModel();
+            assertTrue(currentModel.compareTo(nextModel) <= 0,
+                    "Список не отсортирован по модели: элемент " + i + " с моделью " + currentModel +
+                            " стоит перед элементом " + (i + 1) + " с моделью " + nextModel);
         }
-        // Сортировка по модели
-        Comparator<Car> BY_MODEL =
-                (a, b) -> a.getModel().compareToIgnoreCase(b.getModel());
-
-        new InsertionSortStrategy().sort(randomCars, BY_MODEL);
-        System.out.println("\nПо модели:");
-        for (Car car : randomCars) {
-            System.out.println(car);
-        }
-
     }
 
     @Test
     public void shouldSortByYear() {
-        // TODO: создать список Car в случайном порядке,
-        //       отсортировать по year, проверить ожидаемый порядок
-        List<Car> randomCars = generateRandomCars(20); // создаем 20 машин
-        System.out.println("Случайные машины:");
-        for (Car car : randomCars) {
-            System.out.println(car);
-        }
-        //Сортировка по году
-        Comparator<Car> BY_YEAR =
-                (a, b) -> Integer.compare(a.getYear(), b.getYear());
-
-        new InsertionSortStrategy().sort(randomCars, BY_YEAR);
-        System.out.println("\nПо году:");
-        for (Car car : randomCars) {
-            System.out.println(car);
-
+        List<Car> cars = сarList();
+        InsertionSortStrategy sorter = new InsertionSortStrategy();
+        sorter.sort(cars, CarComparators.BY_YEAR);
+        for (int i = 0; i < cars.size() - 1; i++) {
+            int currentYear = cars.get(i).getYear();
+            int nextYear = cars.get(i + 1).getYear();
+            assertTrue(currentYear <= nextYear,
+                    "Список не отсортирован по году выпуска: элемент " + i + " с годом " + currentYear +
+                            " стоит перед элементом " + (i + 1) + " с годом " + nextYear);
         }
     }
 
     @Test
     public void shouldHandleEmptyList() {
-  //      // TODO: передать пустой список, убедиться что не выбрасывается исключение
-        List<Car> emptyList = new ArrayList<>(); // пустой список
-        Comparator<Car> comparator = Comparator.comparingInt(Car::getHorsePower);
+        List<Car> emptyList = new ArrayList<>();
+        InsertionSortStrategy sorter = new InsertionSortStrategy();
 
-        try {
-            new InsertionSortStrategy().sort(emptyList, comparator);
-
-        } catch (Exception e) {
-            fail("Сортировка не должна выбрасывать исключение для пустого списка, но выбросила: " + e);
-        }
-
+        assertDoesNotThrow(() -> sorter.sort(emptyList, CarComparators.BY_HORSE_POWER),
+                "Сортировка пустого списка должна выполняться без исключений");
         assertTrue(emptyList.isEmpty(), "Пустой список должен остаться пустым после сортировки");
-        System.out.println(emptyList);
     }
 
     @Test
     public void shouldHandleSingleElement() {
-        // TODO: передать список из одного элемента, убедиться что он остался на месте
-
-        List<Car> singleElementList = new ArrayList<>();
         Car car = new Car.Builder()
                 .horsePower(150)
                 .model("Model Single")
                 .year(2015)
                 .build();
+        List<Car> singleElementList = new ArrayList<>();
         singleElementList.add(car);
-
-        // Компаратор по мощности л.с.
-        Comparator<Car> comparator = Comparator.comparingInt(Car::getHorsePower);
-
-        // Для наглядности выводим объект (можно убрать)
-        System.out.println(car);
-
-        try {
-            new InsertionSortStrategy().sort(singleElementList, comparator);
-
-        } catch (Exception e) {
-            fail("Сортировка не должна выбрасывать исключение для списка из одного элемента, но выбросила: " + e);
-        }
-
-        // Проверяем, что размер списка остался 1
-        assertEquals(singleElementList.size(), 1, "Размер списка должен остаться 1");
-
-        // Проверяем, что единственный элемент остался тот же самый объект (ссылка)
-        assertSame(singleElementList.get(0), car, "Единственный элемент списка должен остаться на месте");
+        InsertionSortStrategy sorter = new InsertionSortStrategy();
+        assertDoesNotThrow(() -> sorter.sort(singleElementList, CarComparators.BY_HORSE_POWER),
+                "Сортировка списка из одного элемента должна быть без исключений");
+        assertEquals(1, singleElementList.size(), "Размер списка должен остаться равен 1");
+        assertSame(car, singleElementList.get(0), "Единственный элемент должен остаться тем же объектом");
     }
 
     @Test
     public void shouldHandleListWithDuplicates() {
-        // TODO: создать список где несколько Car имеют одинаковый horsePower,
-        //       проверить что их относительный порядок не изменился после сортировки.
-        List<Car> cars = new ArrayList<>();
         Car car1 = new Car.Builder().horsePower(200).model("Model A").year(2010).build();
         Car car2 = new Car.Builder().horsePower(150).model("Model B").year(2011).build();
         Car car3 = new Car.Builder().horsePower(150).model("Model C").year(2012).build();
         Car car4 = new Car.Builder().horsePower(180).model("Model D").year(2013).build();
         Car car5 = new Car.Builder().horsePower(150).model("Model E").year(2014).build();
 
-        // Добавляем в список в таком порядке
+        List<Car> cars = new ArrayList<>();
         cars.add(car1);
         cars.add(car2);
         cars.add(car3);
         cars.add(car4);
         cars.add(car5);
 
-        Comparator<Car> comparator = Comparator.comparingInt(Car::getHorsePower);
-        new InsertionSortStrategy().sort(cars, comparator);
-
-
-        // Проверяем, что список отсортирован по horsepower
-        // Мощности после сортировки должны идти по возрастанию:
-        // car2(150), car3(150), car5(150), car4(180), car1(200)
-        assertEquals(cars.get(0), car2);
-        assertEquals(cars.get(1), car3);
-        assertEquals(cars.get(2), car5);
-        assertEquals(cars.get(3), car4);
-        assertEquals(cars.get(4), car1);
-
-        // Дополнительно проверяем: относительно одинаковых horsePower порядок сохранился
-        // car2 идет раньше car3, car3 — раньше car5
-        for (Car car : cars) {
-            System.out.println(car);
+        InsertionSortStrategy sorter = new InsertionSortStrategy();
+        sorter.sort(cars, CarComparators.BY_HORSE_POWER);
+        List<Car> expectedOrder = List.of(car2, car3, car5, car4, car1);
+        assertEquals(expectedOrder.size(), cars.size(), "Размер списка после сортировки не совпадает");
+        for (int i = 0; i < expectedOrder.size(); i++) {
+            assertSame(expectedOrder.get(i), cars.get(i),
+                    "Элемент с индексом " + i + " не на своем месте. Ожидалось: " +
+                            expectedOrder.get(i) + ", вместо: " + cars.get(i));
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
