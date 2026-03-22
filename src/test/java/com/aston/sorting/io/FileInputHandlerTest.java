@@ -1,45 +1,97 @@
 package com.aston.sorting.io;
 
+import com.aston.sorting.io.input.FileInputHandler;
+import com.aston.sorting.model.Car;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class FileInputHandlerTest {
 
-    // Используй @TempDir для создания временных файлов — JUnit 5 сам создаёт
-    // и удаляет временную директорию после каждого теста.
-    //
-    // Пример создания тестового файла:
-    //   Path file = tempDir.resolve("cars.csv");
-    //   Files.writeString(file, "150,Toyota,2020\n200,BMW,2018\n");
-    //   FileInputHandler handler = new FileInputHandler(file.toString());
-    //
-    // Формат строки в CSV: horsePower,model,year
+    @TempDir
+    Path tempDir;
 
-    @Test
-    void shouldReadValidCarsFromFile(@TempDir Path tempDir) {
-        // TODO: создать CSV-файл с несколькими валидными строками,
-        //       вызвать read(n),
-        //       проверить что все Car прочитаны и поля совпадают с ожидаемыми
+    private FileInputHandler handler;
+    private Path file;
+
+    @BeforeEach
+    void setUp() {
+        file = tempDir.resolve("cars.csv");
+        handler = new FileInputHandler(file.toString());
     }
 
     @Test
-    void shouldSkipInvalidLines(@TempDir Path tempDir) {
-        // TODO: создать CSV-файл с валидными и невалидными строками
-        //       (например: отрицательный horsePower, год до 1886, пустая модель),
-        //       проверить что невалидные строки пропущены, а валидные — прочитаны
+    void shouldReadValidCarsFromFile() throws IOException {
+        Files.writeString(file, "150,Toyota,2020\n200,BMW,2018\n");
+
+        List<Car> cars = handler.read(Integer.MAX_VALUE);
+
+        assertEquals(2, cars.size());
+        assertAll(
+                () -> assertEquals(150, cars.get(0).getHorsePower()),
+                () -> assertEquals("Toyota", cars.get(0).getModel()),
+                () -> assertEquals(2020, cars.get(0).getYear())
+        );
+        assertAll(
+                () -> assertEquals(200, cars.get(1).getHorsePower()),
+                () -> assertEquals("BMW", cars.get(1).getModel()),
+                () -> assertEquals(2018, cars.get(1).getYear())
+        );
     }
 
     @Test
-    void shouldReturnEmptyListForEmptyFile(@TempDir Path tempDir) {
-        // TODO: создать пустой файл,
-        //       проверить что возвращается пустой список
+    void shouldSkipInvalidLines() throws IOException {
+        // -5 horsePower invalid, year 1800 < 1886 invalid, empty model invalid
+        Files.writeString(file, "150,Toyota,2020\n-5,BMW,2018\n200,Honda,1800\n100,,2010\n");
+
+        List<Car> cars = handler.read(Integer.MAX_VALUE);
+
+        assertEquals(1, cars.size());
+        assertEquals("Toyota", cars.get(0).getModel());
     }
 
     @Test
-    void shouldReturnEmptyListWhenAllLinesInvalid(@TempDir Path tempDir) {
-        // TODO: файл только с невалидными строками,
-        //       проверить что возвращается пустой список (не исключение)
+    void shouldReturnEmptyListForEmptyFile() throws IOException {
+        Files.writeString(file, "");
+
+        List<Car> cars = handler.read(Integer.MAX_VALUE);
+
+        assertTrue(cars.isEmpty());
+    }
+
+    @Test
+    void shouldReturnEmptyListWhenAllLinesInvalid() throws IOException {
+        Files.writeString(file, "-1,BMW,2020\n0,Toyota,2019\n100,Honda,1800\n");
+
+        List<Car> cars = handler.read(Integer.MAX_VALUE);
+
+        assertTrue(cars.isEmpty());
+    }
+
+    @Test
+    void shouldReturnEmptyListWhenFileNotFound() {
+        FileInputHandler localHandler = new FileInputHandler("nonexistent/path/cars.csv");
+
+        List<Car> cars = localHandler.read(Integer.MAX_VALUE);
+
+        assertTrue(cars.isEmpty());
+    }
+
+    @Test
+    void shouldSkipMalformedLines() throws IOException {
+        // wrong number of fields and non-numeric values
+        Files.writeString(file, "notANumber,Toyota,2020\n150,BMW\n100,Honda,2010\n");
+
+        List<Car> cars = handler.read(Integer.MAX_VALUE);
+
+        assertEquals(1, cars.size());
+        assertEquals("Honda", cars.get(0).getModel());
     }
 }
