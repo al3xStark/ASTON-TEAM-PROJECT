@@ -9,7 +9,6 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class FileInputHandler implements InputHandler {
 
@@ -21,12 +20,13 @@ public class FileInputHandler implements InputHandler {
 
     @Override
     public List<Car> read(int size) {
-        try {
-            return Files.lines(Path.of(filePath))
+        try (var lines = Files.lines(Path.of(filePath))) {
+            return lines
                     .filter(line -> !line.isBlank())
                     .map(this::parseLine)
                     .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
+                    .limit(size)
+                    .toList();
         } catch (IOException e) {
             System.out.println("WARNING: Cannot read file '" + filePath + "': " + e.getMessage());
             return Collections.emptyList();
