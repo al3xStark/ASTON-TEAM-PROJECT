@@ -32,6 +32,9 @@ public class CustomList<T> extends AbstractList<T> {
 
     @Override
     public void add(int index, T element) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
         ensureCapacity();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = element;
@@ -44,9 +47,6 @@ public class CustomList<T> extends AbstractList<T> {
     @Override
     @SuppressWarnings("unchecked")
     public T set(int index, T element) {
-        if (element == null) {
-            throw new NullPointerException("Element cannot be null");
-        }
         checkIndex(index);
         T old = (T) elements[index];
         elements[index] = element;
@@ -68,10 +68,7 @@ public class CustomList<T> extends AbstractList<T> {
 
     private void ensureCapacity() {
         if (size == elements.length) {
-            int oldCapacity = elements.length;
-            int newCapacity = oldCapacity == 0 ?
-                    DEFAULT_CAPACITY : elements.length * GROWTH_FACTOR;
-            elements = Arrays.copyOf(elements, newCapacity);
+            elements = Arrays.copyOf(elements, elements.length * GROWTH_FACTOR);
         }
     }
 
