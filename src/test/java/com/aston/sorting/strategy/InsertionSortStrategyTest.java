@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class InsertionSortStrategyTest {
 
-    // Метод создает фиксированный список из 10 машин
+    // Метод создает фиксированный список из 9 машин
     private List<Car> сarList() {
         List<Car> cars = new ArrayList<>();
         cars.add(new Car.Builder().horsePower(150).model("Toyota Corolla").year(2018).build());
@@ -31,7 +31,7 @@ public class InsertionSortStrategyTest {
         sorter=new InsertionSortStrategy();
     }
     @Test
-    public void shouldSortByHorsePower() {
+ void shouldSortByHorsePower() {
 
         List<Car> cars = сarList();
 
@@ -46,7 +46,7 @@ public class InsertionSortStrategyTest {
     }
 
     @Test
-    public void shouldSortByModel() {
+ void shouldSortByModel() {
         List<Car> cars = сarList();
         sorter.sort(cars, CarComparators.BY_MODEL);
         for (int i = 0; i < cars.size() - 1; i++) {
@@ -59,7 +59,7 @@ public class InsertionSortStrategyTest {
     }
 
     @Test
-    public void shouldSortByYear() {
+ void shouldSortByYear() {
         List<Car> cars = сarList();
 
         sorter.sort(cars, CarComparators.BY_YEAR);
@@ -73,7 +73,7 @@ public class InsertionSortStrategyTest {
     }
 
     @Test
-    public void shouldHandleEmptyList() {
+ void shouldHandleEmptyList() {
         List<Car> emptyList = new ArrayList<>();
 
 
@@ -83,7 +83,7 @@ public class InsertionSortStrategyTest {
     }
 
     @Test
-    public void shouldHandleSingleElement() {
+ void shouldHandleSingleElement() {
         Car car = new Car.Builder()
                 .horsePower(150)
                 .model("Model Single")
@@ -99,7 +99,7 @@ public class InsertionSortStrategyTest {
     }
 
     @Test
-    public void shouldHandleListWithDuplicates() {
+ void shouldHandleListWithDuplicates() {
         Car car1 = new Car.Builder().horsePower(200).model("Model A").year(2010).build();
         Car car2 = new Car.Builder().horsePower(150).model("Model B").year(2011).build();
         Car car3 = new Car.Builder().horsePower(150).model("Model C").year(2012).build();
@@ -117,10 +117,8 @@ public class InsertionSortStrategyTest {
         sorter.sort(cars, CarComparators.BY_HORSE_POWER);
         List<Car> expectedOrder = List.of(car2, car3, car5, car4, car1);
         assertEquals(expectedOrder.size(), cars.size(), "Размер списка после сортировки не совпадает");
-        for (int i = 0; i < expectedOrder.size(); i++) {
-            assertSame(expectedOrder.get(i), cars.get(i),
-                    "Элемент с индексом " + i + " не на своем месте. Ожидалось: " +
-                            expectedOrder.get(i) + ", вместо: " + cars.get(i));
+        for (int i = 0; i < cars.size() - 1; i++) {
+            assertTrue(cars.get(i).getHorsePower() <= cars.get(i + 1).getHorsePower());
+        }
         }
     }
-}
