@@ -15,9 +15,9 @@ public class ConcurrentCounter {
         int threadsNum = Math.min(list.size(), processorsAvailable);
         int chunkSize = (int) Math.ceil((double) list.size() / threadsNum);
 
-        ExecutorService executor = Executors.newFixedThreadPool(threadsNum);
 
-        try {
+
+        try (ExecutorService executor = Executors.newFixedThreadPool(threadsNum)) {
             List<Callable<Integer>> tasks = new ArrayList<>();
 
             for (int thread = 0; thread < threadsNum; thread++) {
@@ -34,13 +34,13 @@ public class ConcurrentCounter {
                         }
                     }
                     return count;
-            });
-        }
+                });
+            }
 
-        int total = 0;
-        for (Future<Integer> future : executor.invokeAll(tasks)) {
-            total += future.get();
-        }
+            int total = 0;
+            for (Future<Integer> future : executor.invokeAll(tasks)) {
+                total += future.get();
+            }
             return total;
 
         } catch (InterruptedException e) {
@@ -48,8 +48,6 @@ public class ConcurrentCounter {
             throw  new RuntimeException("Counting interrupted", e);
         } catch (ExecutionException e) {
             throw new RuntimeException("Failed to count", e);
-        } finally {
-            executor.shutdown();
         }
     }
 }
