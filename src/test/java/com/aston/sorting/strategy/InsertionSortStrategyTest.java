@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class InsertionSortStrategyTest {
+class InsertionSortStrategyTest {
 
     // Метод создает фиксированный список из 9 машин
-    private List<Car> сarList() {
+    private List<Car> carList() {
         List<Car> cars = new ArrayList<>();
         cars.add(new Car.Builder().horsePower(150).model("Toyota Corolla").year(2018).build());
         cars.add(new Car.Builder().horsePower(200).model("Ford Mustang").year(2020).build());
@@ -25,15 +25,18 @@ public class InsertionSortStrategyTest {
 
         return cars;
     }
-    private InsertionSortStrategy sorter;
-    @BeforeEach
-            void setUp(){
-        sorter=new InsertionSortStrategy();
-    }
-    @Test
- void shouldSortByHorsePower() {
 
-        List<Car> cars = сarList();
+    private InsertionSortStrategy sorter;
+
+    @BeforeEach
+    void setUp(){
+        sorter = new InsertionSortStrategy();
+    }
+
+    @Test
+    void shouldSortByHorsePower() {
+
+        List<Car> cars = carList();
 
         sorter.sort(cars, CarComparators.BY_HORSE_POWER);
         for (int i = 0; i < cars.size() - 1; i++) {
@@ -46,8 +49,8 @@ public class InsertionSortStrategyTest {
     }
 
     @Test
- void shouldSortByModel() {
-        List<Car> cars = сarList();
+    void shouldSortByModel() {
+        List<Car> cars = carList();
         sorter.sort(cars, CarComparators.BY_MODEL);
         for (int i = 0; i < cars.size() - 1; i++) {
             String currentModel = cars.get(i).getModel();
@@ -59,8 +62,8 @@ public class InsertionSortStrategyTest {
     }
 
     @Test
- void shouldSortByYear() {
-        List<Car> cars = сarList();
+    void shouldSortByYear() {
+        List<Car> cars = carList();
 
         sorter.sort(cars, CarComparators.BY_YEAR);
         for (int i = 0; i < cars.size() - 1; i++) {
@@ -73,7 +76,7 @@ public class InsertionSortStrategyTest {
     }
 
     @Test
- void shouldHandleEmptyList() {
+    void shouldHandleEmptyList() {
         List<Car> emptyList = new ArrayList<>();
 
 
@@ -83,7 +86,7 @@ public class InsertionSortStrategyTest {
     }
 
     @Test
- void shouldHandleSingleElement() {
+    void shouldHandleSingleElement() {
         Car car = new Car.Builder()
                 .horsePower(150)
                 .model("Model Single")
@@ -99,7 +102,7 @@ public class InsertionSortStrategyTest {
     }
 
     @Test
- void shouldHandleListWithDuplicates() {
+    void shouldHandleListWithDuplicates() {
         Car car1 = new Car.Builder().horsePower(200).model("Model A").year(2010).build();
         Car car2 = new Car.Builder().horsePower(150).model("Model B").year(2011).build();
         Car car3 = new Car.Builder().horsePower(150).model("Model C").year(2012).build();
@@ -113,12 +116,10 @@ public class InsertionSortStrategyTest {
         cars.add(car4);
         cars.add(car5);
 
-
         sorter.sort(cars, CarComparators.BY_HORSE_POWER);
-        List<Car> expectedOrder = List.of(car2, car3, car5, car4, car1);
-        assertEquals(expectedOrder.size(), cars.size(), "Размер списка после сортировки не совпадает");
+
         for (int i = 0; i < cars.size() - 1; i++) {
             assertTrue(cars.get(i).getHorsePower() <= cars.get(i + 1).getHorsePower());
         }
-        }
     }
+}

@@ -3,7 +3,7 @@ import com.aston.sorting.model.Car;
 import java.util.Comparator;
 import java.util.List;
 
-public class InsertionSortStrategy implements com.aston.sorting.strategy.SortStrategy<com.aston.sorting.model.Car> {
+public class InsertionSortStrategy implements SortStrategy<Car> {
 
     @Override
     public void sort(List<Car> cars, Comparator<Car> comparator) {
