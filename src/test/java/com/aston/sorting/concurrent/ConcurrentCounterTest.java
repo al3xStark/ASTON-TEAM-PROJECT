@@ -1,6 +1,7 @@
 package com.aston.sorting.concurrent;
 
 import com.aston.sorting.model.Car;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -8,6 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 class ConcurrentCounterTest {
+    ConcurrentCounter counter;
+
+    @BeforeEach
+    void setUp() {
+        counter = new ConcurrentCounter();
+    }
 
     @Test
     void shouldReturnCorrectCount() {
@@ -18,7 +25,7 @@ class ConcurrentCounterTest {
         Car car4 = new Car.Builder().horsePower(1300).model("kraz").year(1990).build();
         List<Car> cars = List.of(car, car1, car2, car3, car4, car, car,car);
 
-        ConcurrentCounter counter = new ConcurrentCounter();
+
         int number = counter.countOccurrences(cars, car);
 
         assertEquals(4, number);
@@ -29,7 +36,6 @@ class ConcurrentCounterTest {
         Car car = new Car.Builder().horsePower(120).model("honda").year(2026).build();
         List<Car> cars = new ArrayList<>();
 
-        ConcurrentCounter counter = new ConcurrentCounter();
         int number = counter.countOccurrences(cars, car);
 
         assertEquals(0, number);
@@ -44,7 +50,6 @@ class ConcurrentCounterTest {
         Car car4 = new Car.Builder().horsePower(1300).model("kraz").year(1990).build();
         List<Car> cars = List.of(car1, car1, car2, car3, car4, car2, car3,car4);
 
-        ConcurrentCounter counter = new ConcurrentCounter();
         int number = counter.countOccurrences(cars, car);
 
         assertEquals(0, number);
@@ -55,7 +60,6 @@ class ConcurrentCounterTest {
         Car car = new Car.Builder().horsePower(120).model("honda").year(2026).build();
         List<Car> cars = List.of(car, car, car, car, car, car);
 
-        ConcurrentCounter counter = new ConcurrentCounter();
         int number = counter.countOccurrences(cars, car);
 
         assertEquals(cars.size(), number);
@@ -74,7 +78,6 @@ class ConcurrentCounterTest {
             }
         }
 
-        ConcurrentCounter counter = new ConcurrentCounter();
         int number = counter.countOccurrences(cars, car);
 
         assertEquals(3000, number);
