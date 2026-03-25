@@ -19,51 +19,54 @@ public class ManualInputHandler implements InputHandler {
         this.scanner = new Scanner(System.in);
     }
 
-    @Override
-    public List<Car> read(int size) {
-        List<Car> cars = new ArrayList<>(size);
+    public Car readOne() {
         int year;
         int horsePower;
         String model;
 
-        while(size > 0) {
-            System.out.println("Введите мощность");
+        System.out.println("Введите мощность");
 
-            while (true) {
-                try {
-                    horsePower = Integer.parseInt(scanner.nextLine().trim());
-                    if (CarValidator.validateHorsePower(horsePower)) {
-                        break;
-                    }
-                    System.out.printf("Ошибка: мощность не может быть меньше или равной 0 (мощность = %d). Введите мощность:%n", horsePower);
-                } catch (NumberFormatException e) {
-                    System.out.println("Ошибка: ожидается целое число. Введите мощность:");
+        while (true) {
+            try {
+                horsePower = Integer.parseInt(scanner.nextLine().trim());
+                if (CarValidator.validateHorsePower(horsePower)) {
+                    break;
                 }
+                System.out.printf("Ошибка: мощность не может быть меньше или равной 0 (мощность = %d). Введите мощность:%n", horsePower);
+            } catch (NumberFormatException e) {
+                System.out.println("Ошибка: ожидается целое число. Введите мощность:");
             }
+        }
 
-            System.out.println("Введите модель: ");
+        System.out.println("Введите модель: ");
+        model = scanner.nextLine();
+
+        while (! CarValidator.validateModel(model)) {
+            System.out.printf("Ошибка: значение не может быть пустым (модель = %s)  Введите модель: \n", model);
             model = scanner.nextLine();
+        }
 
-            while (! CarValidator.validateModel(model)) {
-                System.out.printf("Ошибка: значение не может быть пустым (модель = %s)  Введите модель: \n", model);
-                model = scanner.nextLine();
-            }
+        System.out.println("Введите год: ");
 
-            System.out.println("Введите год: ");
-
-            while (true) {
-                try {
-                    year = Integer.parseInt(scanner.nextLine().trim());
-                    if (CarValidator.validateYear(year)) {
-                        break;
-                    }
-                    System.out.printf("Ошибка: год должен быть между 1886 и текущим (год = %d). Введите год: \n", year);
-                } catch (NumberFormatException e) {
-                    System.out.println("Ошибка: ожидается целое число. Введите год:");
+        while (true) {
+            try {
+                year = Integer.parseInt(scanner.nextLine().trim());
+                if (CarValidator.validateYear(year)) {
+                    break;
                 }
+                System.out.printf("Ошибка: год должен быть между 1886 и текущим (год = %d). Введите год: \n", year);
+            } catch (NumberFormatException e) {
+                System.out.println("Ошибка: ожидается целое число. Введите год:");
             }
+        }
+        return new Car.Builder().model(model).year(year).horsePower(horsePower).build();
+    }
 
-            Car car = new Car.Builder().model(model).year(year).horsePower(horsePower).build();
+    @Override
+    public List<Car> read(int size) {
+        List<Car> cars = new ArrayList<>(size);
+        while(size > 0) {            
+            Car car = readOne();
             cars.add(car);
             size -=1;
         }
