@@ -16,6 +16,6 @@ public class SortContext<T> {
     }
 
     public void executeSort(List<T> list, Comparator<T> comparator) {
-        // TODO: делегировать сортировку текущей стратегии
+        strategy.sort(list, comparator);
     }
 }
