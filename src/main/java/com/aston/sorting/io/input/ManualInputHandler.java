@@ -28,14 +28,18 @@ public class ManualInputHandler implements InputHandler {
 
         while(size > 0) {
             System.out.println("Введите мощность");
-            horsePower = scanner.nextInt();
 
-            while (! CarValidator.validateHorsePower(horsePower)) {
-                System.out.printf("Ошибка: мощность не может быть меньше или равной 0 (мощность = %d)."
-                        + " Введите мощность: \n", horsePower);
-                horsePower = scanner.nextInt();
+            while (true) {
+                try {
+                    horsePower = Integer.parseInt(scanner.nextLine().trim());
+                    if (CarValidator.validateHorsePower(horsePower)) {
+                        break;
+                    }
+                    System.out.printf("Ошибка: мощность не может быть меньше или равной 0 (мощность = %d). Введите мощность:%n", horsePower);
+                } catch (NumberFormatException e) {
+                    System.out.println("Ошибка: ожидается целое число. Введите мощность:");
+                }
             }
-            scanner.nextLine();
 
             System.out.println("Введите модель: ");
             model = scanner.nextLine();
@@ -46,13 +50,18 @@ public class ManualInputHandler implements InputHandler {
             }
 
             System.out.println("Введите год: ");
-            year = scanner.nextInt();
 
-            while (! CarValidator.validateYear(year)) {
-                System.out.printf("Ошибка: год должен быть между 1886 и текущим (год = %d). Введите год: \n", year);
-                year= scanner.nextInt();
+            while (true) {
+                try {
+                    year = Integer.parseInt(scanner.nextLine().trim());
+                    if (CarValidator.validateYear(year)) {
+                        break;
+                    }
+                    System.out.printf("Ошибка: год должен быть между 1886 и текущим (год = %d). Введите год: \n", year);
+                } catch (NumberFormatException e) {
+                    System.out.println("Ошибка: ожидается целое число. Введите год:");
+                }
             }
-
 
             Car car = new Car.Builder().model(model).year(year).horsePower(horsePower).build();
             cars.add(car);
