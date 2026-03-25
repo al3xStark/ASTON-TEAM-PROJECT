@@ -1,51 +1,93 @@
 package com.aston.sorting.io;
 
+import com.aston.sorting.io.input.ManualInputHandler;
+import com.aston.sorting.model.Car;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.List;
 
 class ManualInputHandlerTest {
 
-    // ManualInputHandler должен принимать InputStream в конструкторе,
-    // чтобы в тестах можно было подменить System.in на заготовленный ввод.
-    //
-    // Пример подмены ввода:
-    //   String input = "150\nToyota\n2020\n";
-    //   InputStream stream = new ByteArrayInputStream(input.getBytes());
-    //   ManualInputHandler handler = new ManualInputHandler(stream);
-    //
-    // Каждая строка — отдельный "Enter" пользователя.
-    // Порядок полей при вводе: horsePower → model → year
-
     @Test
     void shouldCreateCarFromValidInput() {
-        // TODO: собрать строку с валидными значениями (horsePower, model, year),
-        //       обернуть в ByteArrayInputStream, передать в конструктор ManualInputHandler,
-        //       вызвать read(1), проверить что Car создан с правильными полями
+            String input = "99\nLada\n2010\n";
+            InputStream testStream = new ByteArrayInputStream(input.getBytes());
+            ManualInputHandler handler = new ManualInputHandler(testStream);
+
+            List<Car> cars = handler.read(1);
+            Car car = cars.getFirst();
+
+            assertEquals(1, cars.size());
+            assertEquals(99, car.getHorsePower());
+            assertEquals("Lada", car.getModel());
+            assertEquals(2010, car.getYear());
     }
 
     @Test
     void shouldRetryOnInvalidHorsePower() {
-        // TODO: первой строкой передать невалидный horsePower (например, -1 или "abc"),
-        //       второй — валидный, затем model и year,
-        //       проверить что Car всё равно создан с правильным horsePower
+        String input = "0\n100\nLada\n2010\n";
+        InputStream testStream = new ByteArrayInputStream(input.getBytes());
+        ManualInputHandler handler = new ManualInputHandler(testStream);
+
+        List<Car> cars = handler.read(1);
+        Car car = cars.getFirst();
+
+        assertEquals(1, cars.size());
+        assertEquals(100, car.getHorsePower());
+        assertEquals("Lada", car.getModel());
+        assertEquals(2010, car.getYear());
     }
 
     @Test
     void shouldRetryOnInvalidYear() {
-        // TODO: передать валидный horsePower и model,
-        //       первым годом — невалидный (например, 1800), затем — валидный,
-        //       проверить что Car создан с правильным year
+        String input = "99\nLada\n010\n2010\n";
+        InputStream testStream = new ByteArrayInputStream(input.getBytes());
+        ManualInputHandler handler = new ManualInputHandler(testStream);
+
+        List<Car> cars = handler.read(1);
+        Car car = cars.getFirst();
+
+        assertEquals(1, cars.size());
+        assertEquals(99, car.getHorsePower());
+        assertEquals("Lada", car.getModel());
+        assertEquals(2010, car.getYear());
     }
 
     @Test
     void shouldRetryOnEmptyModel() {
-        // TODO: передать валидный horsePower,
-        //       первой строкой модели — пустую строку, затем — валидную,
-        //       проверить что Car создан с правильной model
+        String input = "100\n\nLada\n2010\n";
+        InputStream testStream = new ByteArrayInputStream(input.getBytes());
+        ManualInputHandler handler = new ManualInputHandler(testStream);
+
+        List<Car> cars = handler.read(1);
+        Car car = cars.getFirst();
+
+        assertEquals(1, cars.size());
+        assertEquals(100, car.getHorsePower());
+        assertEquals("Lada", car.getModel());
+        assertEquals(2010, car.getYear());
     }
 
     @Test
     void shouldCreateMultipleCarsFromValidInput() {
-        // TODO: передать ввод для 2 Car подряд, вызвать read(2),
-        //       проверить что оба Car созданы корректно
-}
+        String input = "100\nLada\n2010\n120\nHonda\n2026\n";
+        InputStream testStream = new ByteArrayInputStream(input.getBytes());
+        ManualInputHandler handler = new ManualInputHandler(testStream);
+
+        List<Car> cars = handler.read(2);
+        Car car1 = cars.getFirst();
+        Car car2 = cars.get(1);
+
+        assertEquals(2, cars.size());
+        assertEquals(100, car1.getHorsePower());
+        assertEquals("Lada", car1.getModel());
+        assertEquals(2010, car1.getYear());
+
+        assertEquals(120, car2.getHorsePower());
+        assertEquals("Honda", car2.getModel());
+        assertEquals(2026, car2.getYear());
+    }
 }
